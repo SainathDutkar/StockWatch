@@ -1,4 +1,4 @@
-package crawler;
+package com.insight.cralwler;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -7,6 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+
+
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 public class URLExtractor {
 
@@ -26,7 +32,7 @@ public class URLExtractor {
 	}
 	
 	
-	public static List<String> extractUrls(StringBuilder urls)
+	public static List<String> extractUrls(String urls)
 	{
 	    List<String> containedUrls = new ArrayList<String>();
 	    Pattern pattern = Pattern.compile("href=\"([^\"]*)\"", Pattern.CASE_INSENSITIVE);
@@ -51,12 +57,32 @@ public class URLExtractor {
 	    return containedUrls;
 	}
 	
+	public static List<String> getURLJsoup(Document doc)
+	{
+		List<String> URLS = new ArrayList<>();
+		
+		 Elements linksOnPage = doc.select("a[href]");
+
+         //5. For each extracted URL... go back to Step 4.
+         for (Element page : linksOnPage) {
+        	 if(page.attr("abs:href").startsWith("https://en.wikipedia.org/wiki/"))
+        	 {
+             URLS.add(page.attr("abs:href"));
+        	 }
+         }
+		
+		return URLS;
+		
+	}
+	
 	public static String geturlName(String seedURL)
 	{
 		String tempString = seedURL;
 		tempString= tempString.substring(30,tempString.length());
 		tempString = tempString.replaceAll("[^a-zA-Z0-9]+", "");
+	//	System.out.println(tempString);
 		return tempString;
 	}
+	
 	
 }

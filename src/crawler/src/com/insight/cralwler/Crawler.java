@@ -1,4 +1,4 @@
-package crawler;
+package com.insight.cralwler;
 
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
@@ -15,21 +15,31 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Queue;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Crawler {
-	
+
 	private static Queue<String> queue = new LinkedList<String>();
 	private static List<String> visitedURL = new ArrayList<String>();
 	private static List<String> related = new ArrayList<String>(); 
 	private static List<String> savedPages = new ArrayList<String>();
 	static int visitedcount,pagecount = 0;
 	
-	public static String getURL()
+	// To get the queue size
+	public static int getQueueSize()
 	{
-		
+		return queue.size();
+	}
+	
+	
+	// To get the new URL from the queue 
+	public static String getURL()
+	{	
 		String url = null;
 		if(!queue.isEmpty())
 		{
+		//	System.out.println("Size of Queue "+queue.size());
 			do
 			{
 		     url =  queue.poll();
@@ -42,6 +52,7 @@ public class Crawler {
 		}
 	}
 	
+	// To add the new extracted URLs to the list 
 	public static void addURL(List<String> url)
 	{
 		Iterator<String> ir = url.iterator();
@@ -49,6 +60,8 @@ public class Crawler {
 		queue.add(ir.next());	
 	}
 	
+	
+	// To verify if the new URL is already saved 
 	public static boolean isMarked (String url)
 	{
 		if(visitedURL.contains(url))
@@ -58,12 +71,14 @@ public class Crawler {
 		
 	}
 	
+	// to add the url to the visited URLs to list
 	public static void addtolist(String url)
 	{
 		visitedcount++;
 	//	System.out.println("Added"+visitedcount+" : "+url);
 		visitedURL.add(url);
 	}
+	
 	
 	public static void addRelatedwords(String relatedword)
 	{
@@ -77,6 +92,8 @@ public class Crawler {
 		return relatedwords;
 	}
 	
+	
+	// to get the Seed URL and related words from the property file
 	public static void loadPropertyfile() throws IOException
 	{
 		Properties prop = new Properties();
@@ -84,10 +101,24 @@ public class Crawler {
 		prop.load(is);
 		
 		List<String> url = new ArrayList<String>();
-		url.add(prop.getProperty("seed1"));
-		url.add(prop.getProperty("seed2"));
+		
+		String nyseUrl = prop.getProperty("seed1");
+		for(char c='A';c<='Z';c++)
+		{
+			url.add(nyseUrl+c+")");
+		}
+		
+		for(int i=2 ;i<=7;i++)
+		{
+			url.add(prop.getProperty("seed"+i));
+		}
+		
+
+		
+	
 		addURL(url);
-		for(int i=0;i<7;i++)
+		
+		for(int i=0;i<6;i++)
 		{
 			addRelatedwords(prop.getProperty("relatedTerm"+i));
 		}
@@ -96,12 +127,7 @@ public class Crawler {
 	public static void printer()    /*created for testing purpose*/
 	{
 		System.out.println("Visited URLS size "+visitedURL.size());
-	/*	Iterator<String> ir = visitedURL.iterator();
-		while(ir.hasNext())
-		{
-			System.out.println("Printing from printer "+ir.next());
-		}
-		*/
+
 	}
 	
 	public static int markedcount()
@@ -109,6 +135,7 @@ public class Crawler {
 		return visitedURL.size();
 	}
 	
+	// to create a list of all visited URLs in the text file 
 	public static void writetoFile()
 	{
 			String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
@@ -132,32 +159,25 @@ public class Crawler {
 
 	}
 	
-	public static void saveCrawledPage(String URLNAME,String URLTEXT)
+	
+	
+	public static boolean verifyReltedTerms(String urlText,String[] relatedTerms) // New function validating using regex pattern matching
 	{
-		pagecount++;
-		
-		
-		if(savedPages.contains(URLNAME))
+	    int count =0; 
+		for(int i=0; i<relatedTerms.length;i++)
 		{
-			URLNAME = URLNAME+"extension";
-		}else if(URLNAME.equals("aux")||URLNAME.equals("con")||URLNAME.equals("prn")||URLNAME.equals("nul"))
-		{
-			URLNAME = URLNAME+"extension";
+			Pattern pattern = Pattern.compile(relatedTerms[i], Pattern.CASE_INSENSITIVE);
+		    Matcher urlMatcher = pattern.matcher(urlText);
+		    if(urlMatcher.find())
+		    {
+		    	count++;
+		    }
+		    if(count>=3)
+		    {
+		    	return true;
+		    }
 		}
-		savedPages.add(URLNAME);
-	//	System.out.println(URLNAME);
-		
-		try  (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(URLNAME+".html"), "utf-8"))) {
-
-				writer.write(URLTEXT);
-
-		} catch (IOException e) {
-
-			e.printStackTrace();
-
-		}
-		
+		return false;
 	}
-	
-	
+		
 }
