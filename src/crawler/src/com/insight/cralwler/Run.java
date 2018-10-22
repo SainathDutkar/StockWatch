@@ -3,6 +3,7 @@ package com.insight.cralwler;
 import java.util.HashMap;
 
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.jsoup.nodes.Document;
 
 import com.insight.cralwler.Crawler;
@@ -21,6 +22,7 @@ public class Run {
 			
 		  	// Load the seed URLS from the property File 
 		  	Crawler.loadPropertyfile();
+		  	Validator.setSymbolProperties();
 		  	int InitialQueueSize = Crawler.getQueueSize();
 		  	int count = 0;
 		  	String seedurl;
@@ -33,20 +35,25 @@ public class Run {
 				if(doc== null)
 					continue;
 				urlText = doc.toString();
-				//System.out.println(doc.title());
-				if(urlText.contains("www.nyse.com/quote")||urlText.contains("www.nasdaq.com/symbol/") )
+				
+				if(Validator.validateLink(doc))
 				{
 				
 					Crawler.addtolist(seedurl);
-				//	System.out.println(Crawler.markedcount());
-					
+					System.out.println("Marked "+Crawler.markedcount());
+					System.out.println("Processing :"+doc.title());
+					JSONObject StockInfo = Validator.getStockInfo(doc);
+					System.out.println("Stock Info"+StockInfo);
 					wikiInfo =JsonHandler.getWikiInfo(doc);
 					wikiHistory = JsonHandler.getWikiHistory(doc.title());
 					
+					
+				//	System.out.println(StockInfo.isEmpty());
+					//if(StockInfo!=null)
 					if(wikiInfo!=null && wikiHistory!=null && wikiInfo.containsKey("StockExchange"))
 					{
 						System.out.println("Saving   "+doc.title());
-						JsonHandler.writeJsonFile(seedurl,wikiInfo,wikiHistory);
+						JsonHandler.writeJsonFile(seedurl,wikiInfo,wikiHistory,StockInfo);
 						JsonHandler.writeRawData(doc);
 					}
 					

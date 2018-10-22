@@ -41,6 +41,55 @@ public class JsonHandler {
 	
 	
 	
+	/*public static HashMap<String,String> getWikiInfo(Document doc)
+	{
+		HashMap<String, String>wikiInfo = new HashMap<>(); 
+		Elements companyInfo = doc.getElementsByClass("infobox vcard");
+		
+         Element table = companyInfo.first();
+         String title = doc.title();
+         wikiInfo.put("Name", title.substring(0, title.length()-12));
+         
+         try
+         {
+          Elements rows = table.select("tr");
+          
+          for (Element row : rows)
+          {
+        	  if(row.select("td").text().contains("NYSE:") ||row.select("td").text().contains("NASDAQ:"))
+        	  {
+        		 String rowData = row.select("td").text();
+        		 
+        		 if(rowData.contains("NYSE")){
+        		  wikiInfo.put("StockExchange","NYSE");
+        		  Symbol = rowData.substring(rowData.indexOf("NYSE:")+6,rowData.length());}
+        		 else {
+        			 wikiInfo.put("StockExchange","NASDAQ");
+        			 Symbol = rowData.substring(rowData.indexOf("NASDAQ:")+8,rowData.length());}
+        		 
+        		// Symbol = rowData.substring(rowData.indexOf(':')+2,rowData.length());
+        		
+        		 if(Symbol.replaceAll("[0-9]","").replaceAll("]","").replaceAll("\\p{P}","").length()>5)
+        			 Symbol = Symbol.substring(0, Symbol.indexOf(' ')).replaceAll("[^a-zA-Z0-9]","");
+        		// Symbol = rowData.substring(rowData.indexOf(':')+2,rowData.indexOf(' ',rowData.indexOf(' ')+1));
+        		 
+        		// System.out.println(Symbol);
+        		 wikiInfo.put("Symbol",Symbol.trim());	 
+        	  }
+        	  else
+        	  {
+        	  wikiInfo.put(row.select("th").text(), row.select("td").text());
+        	  }
+          }
+         }
+         catch(NullPointerException e)
+         {
+        	 return null;
+         }
+		return wikiInfo;
+	}*/
+	
+	
 	public static HashMap<String,String> getWikiInfo(Document doc)
 	{
 		HashMap<String, String>wikiInfo = new HashMap<>(); 
@@ -78,6 +127,7 @@ public class JsonHandler {
         	  }
         	  else
         	  {
+        	  if(!(row.select("td").text().contains("NYSE:") ||row.select("td").text().contains("NASDAQ:")))
         	  wikiInfo.put(row.select("th").text(), row.select("td").text());
         	  }
           }
@@ -136,10 +186,10 @@ public class JsonHandler {
 		return history;
 	}
 	
-	public static boolean writeJsonFile(String seedURL,HashMap<String, String> wikiInfo, JSONArray wikiHistory )
+	public static boolean writeJsonFile(String seedURL,HashMap<String, String> wikiInfo, JSONArray wikiHistory,JSONObject wikiJson )
 	{
 		
-		JSONObject wikiJson = new JSONObject();
+	//	JSONObject wikiJson = new JSONObject();
 		
 		for(String key : wikiInfo.keySet())
 		{
@@ -149,7 +199,7 @@ public class JsonHandler {
 		wikiJson.put("PageHistory",wikiHistory);
 		wikiJson.put("WikiLink", seedURL);
 		path = "output/"+wikiInfo.get("Name")+".json";
-		
+		System.out.println(path);
 		try (FileWriter file = new FileWriter(path)) {
 
             file.write(wikiJson.toJSONString());
