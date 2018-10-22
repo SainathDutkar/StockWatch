@@ -31,6 +31,7 @@ public class Validator {
 		return title;
 	}
 	
+	// Get the basic stock information of the page
 	public static JSONObject getStockInfo(Document Doc)
 	{
 		JSONObject stock = new JSONObject();
@@ -57,15 +58,12 @@ public class Validator {
 		return null;
 	}
 	
-	
+	// Validate the symbol on the page to be a geniune Stock symbol related to the webpage
 	public static boolean validateSymbol(String title, String symbol)
 	{
 		String StockName = null;
 			
 			StockName = stock.getProperty(symbol);
-			System.out.println(title);
-			System.out.println(symbol);
-			System.out.println(StockName);
 			
 		if(StockName==null)
 			return false;
@@ -77,7 +75,7 @@ public class Validator {
 			return false;
 	}
 
-	
+	// Validate the link to be a Nasdaq or NYSE page
 	public static boolean validateLink(Document Doc)
 	{
 		if(Doc.toString().contains(NYSESymbol)||Doc.toString().contains(NasdaqSymbol))

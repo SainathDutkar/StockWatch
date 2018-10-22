@@ -22,48 +22,47 @@ public class Run {
 			
 		  	// Load the seed URLS from the property File 
 		  	Crawler.loadPropertyfile();
-		  	Validator.setSymbolProperties();
+		// Load the stock symbols from property file
+			Validator.setSymbolProperties();
 		  	int InitialQueueSize = Crawler.getQueueSize();
 		  	int count = 0;
 		  	String seedurl;
 		  	while((seedurl = Crawler.getURL())!=null)
 		  	{
-		  		System.out.println(Crawler.getQueueSize());
-		 		
+		  		
+		 		//Get the Jsoup document of the wikipedia page
 				doc = JsonHandler.getUrlDoc(seedurl);
 				
 				if(doc== null)
 					continue;
 				urlText = doc.toString();
 				
+				// Validate the wikipedia page to be geniune Nasdaq or NYSE page
 				if(Validator.validateLink(doc))
 				{
 				
 					Crawler.addtolist(seedurl);
-					System.out.println("Marked "+Crawler.markedcount());
-					System.out.println("Processing :"+doc.title());
+				
 					JSONObject StockInfo = Validator.getStockInfo(doc);
-					System.out.println("Stock Info"+StockInfo);
+			
 					wikiInfo =JsonHandler.getWikiInfo(doc);
 					wikiHistory = JsonHandler.getWikiHistory(doc.title());
 					
 					
-				//	System.out.println(StockInfo.isEmpty());
-					//if(StockInfo!=null)
+					// Write the page informationa and History to JSON file post validation
 					if(wikiInfo!=null && wikiHistory!=null && wikiInfo.containsKey("StockExchange"))
 					{
-						System.out.println("Saving   "+doc.title());
+					
 						JsonHandler.writeJsonFile(seedurl,wikiInfo,wikiHistory,StockInfo);
 						JsonHandler.writeRawData(doc);
 					}
 					
-				//		JsonHandler.writeJsonFileWithHistory(JsonHandler.getWikiInfo(doc), JsonHandler.getTopWikiHistory(doc.title()));
-					
+				
 				}
 			//To limit the depth of the clawer only till Seeds Urls
 				if(count < InitialQueueSize)
 				{
-				//	System.out.println(count);
+			
 					Crawler.addURL(URLExtractor.getURLJsoup(doc));
 					count++;
 					

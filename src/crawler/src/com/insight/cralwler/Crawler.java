@@ -39,7 +39,7 @@ public class Crawler {
 		String url = null;
 		if(!queue.isEmpty())
 		{
-		//	System.out.println("Size of Queue "+queue.size());
+	
 			do
 			{
 		     url =  queue.poll();
@@ -75,7 +75,7 @@ public class Crawler {
 	public static void addtolist(String url)
 	{
 		visitedcount++;
-	//	System.out.println("Added"+visitedcount+" : "+url);
+
 		visitedURL.add(url);
 	}
 	
@@ -113,9 +113,6 @@ public class Crawler {
 			url.add(prop.getProperty("seed"+i));
 		}
 		
-
-		
-	
 		addURL(url);
 		
 		for(int i=0;i<6;i++)
