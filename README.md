@@ -11,3 +11,8 @@ Concentrating mainly on the NASDAQ and NYSE listed companies pages and monitorin
 ## Data
 Crawling the wikipedia pages of NASDAQ and NYSE listed companies to get the basic information of the company and the history of edits on the page. 
 
+## Pipeline
+
+![alt text](https://github.com/SainathDutkar/StockWatch/blob/master/docs/Pipeline.PNG)
+
+
