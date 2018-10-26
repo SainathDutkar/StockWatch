@@ -1,4 +1,4 @@
-# Wiki Stats
+# Stock Watch
 
 ## Motivation
 Wikipedia is an online encyclopaedia, created and edited by volunteers.
