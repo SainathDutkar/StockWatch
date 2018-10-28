@@ -37,4 +37,7 @@ Crawling the wikipedia pages of NASDAQ and NYSE listed companies to get the basi
  - Amazon RDS MySQL
  - Dash by Plotly
  
- ## 
+ ## Further scope of improvements
+ Currently the pipeline is concentrating mainly on NASDAQ and NYSE wikipedia pages, The crawler can be modified to crawl the webpages related to a specific company and monitor the changes on the pages.
+ 
+ 
