@@ -66,14 +66,11 @@ public class JsonHandler {
         		 else {
         			 wikiInfo.put("StockExchange","NASDAQ");
         			 Symbol = rowData.substring(rowData.indexOf("NASDAQ:")+8,rowData.length());}
-        		 
-        		// Symbol = rowData.substring(rowData.indexOf(':')+2,rowData.length());
+        	
         		
         		 if(Symbol.replaceAll("[0-9]","").replaceAll("]","").replaceAll("\\p{P}","").length()>5)
         			 Symbol = Symbol.substring(0, Symbol.indexOf(' ')).replaceAll("[^a-zA-Z0-9]","");
-        		// Symbol = rowData.substring(rowData.indexOf(':')+2,rowData.indexOf(' ',rowData.indexOf(' ')+1));
-        		 
-        		// System.out.println(Symbol);
+
         		 wikiInfo.put("Symbol",Symbol.trim());	 
         	  }
         	  else
