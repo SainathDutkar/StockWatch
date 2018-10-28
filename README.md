@@ -13,6 +13,6 @@ Crawling the wikipedia pages of NASDAQ and NYSE listed companies to get the basi
 
 ## Pipeline
 
-![alt text](https://github.com/SainathDutkar/StockWatch/blob/master/docs/StockWatchPipeline.PNG)
+![alt text](https://github.com/SainathDutkar/StockWatch/blob/master/images/StockWatchPipeline.PNG)
 
 
