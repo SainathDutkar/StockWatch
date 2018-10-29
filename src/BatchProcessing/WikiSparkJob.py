@@ -77,4 +77,5 @@ def main():
     print("Histroy data updated")
 
 
-main()
+if __name__ == '__main__':
+	main()
