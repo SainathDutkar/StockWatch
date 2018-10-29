@@ -1,0 +1,7 @@
+# to create a cron job
+crontab -e
+
+# Cron syntax
+# m h dom mon dow command
+
+30 0 * * *  /home/ubuntu/WikiCrawler/runCrawlerJob.sh
